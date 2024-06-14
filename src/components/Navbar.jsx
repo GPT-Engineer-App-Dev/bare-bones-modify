@@ -14,6 +14,9 @@ const Navbar = () => {
           <Button as={RouterLink} to="/events" colorScheme="teal" variant="solid" size="sm" ml={4}>
             Manage Events
           </Button>
+          <Button as={RouterLink} to="/venues" colorScheme="teal" variant="solid" size="sm" ml={4}>
+            Manage Venues
+          </Button>
         </Flex>
       </Flex>
     </Box>
