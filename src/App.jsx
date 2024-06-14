@@ -8,6 +8,7 @@ import VenueManagement from "./pages/VenueManagement.jsx";
 import EventDetails from "./pages/EventDetails.jsx";
 import Login from "./pages/Login.jsx";
 import { useSupabaseAuth } from "./integrations/supabase/auth.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
   const { session, logout } = useSupabaseAuth();
@@ -18,8 +19,8 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/events" element={<EventManagement />} />
-        <Route path="/venues" element={<VenueManagement />} />
+        <Route path="/events" element={<ProtectedRoute><EventManagement /></ProtectedRoute>} />
+        <Route path="/venues" element={<ProtectedRoute><VenueManagement /></ProtectedRoute>} />
         <Route path="/events/:id" element={<EventDetails />} />
       </Routes>
       {session ? (
