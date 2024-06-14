@@ -8,7 +8,7 @@ const EventDetails = () => {
   const { id } = useParams();
   const { data: event, isLoading: eventLoading, isError: eventError } = useEvent(id);
   const { data: venue, isLoading: venueLoading, isError: venueError } = useVenue(event?.venue);
-  const { data: comments, isLoading: commentsLoading, isError: commentsError } = useComments();
+  const { data: comments, isLoading: commentsLoading, isError: commentsError } = useComments(id);
   const addComment = useAddComment();
 
   const [newComment, setNewComment] = useState({ content: '', event_id: id });
@@ -23,8 +23,10 @@ const EventDetails = () => {
     setNewComment({ content: '', event_id: id });
   };
 
-  if (eventLoading || venueLoading || commentsLoading) return <div>Loading...</div>;
-  if (eventError || venueError || commentsError) return <div>Error loading data</div>;
+  if (eventLoading || venueLoading) return <div>Loading event or venue...</div>;
+  if (eventError || venueError) return <div>Error loading event or venue data</div>;
+  if (commentsLoading) return <div>Loading comments...</div>;
+  if (commentsError) return <div>Error loading comments</div>;
 
   return (
     <Container maxW="container.lg">
@@ -36,11 +38,15 @@ const EventDetails = () => {
         <Text>Type: {venue.type}</Text>
         <Box width="100%">
           <Heading as="h2" size="lg">Comments</Heading>
-          {comments.filter(comment => comment.event_id === id).map((comment) => (
-            <Box key={comment.id} p={4} borderWidth="1px" borderRadius="lg">
-              <Text>{comment.content}</Text>
-            </Box>
-          ))}
+          {comments.length > 0 ? (
+            comments.filter(comment => comment.event_id === id).map((comment) => (
+              <Box key={comment.id} p={4} borderWidth="1px" borderRadius="lg">
+                <Text>{comment.content}</Text>
+              </Box>
+            ))
+          ) : (
+            <Text>No comments yet. Be the first to comment!</Text>
+          )}
         </Box>
         <Box width="100%">
           <Heading as="h2" size="lg">Add a Comment</Heading>
