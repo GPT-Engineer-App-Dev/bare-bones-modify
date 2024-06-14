@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, Heading, Table, Tbody, Td, Th, Thead, Tr, VStack, Input, FormControl, FormLabel } from '@chakra-ui/react';
-import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../integrations/supabase/index.js';
+import { Box, Button, Container, Heading, Table, Tbody, Td, Th, Thead, Tr, VStack, Input, FormControl, FormLabel, Select } from '@chakra-ui/react';
+import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useVenues } from '../integrations/supabase/index.js';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const EventManagement = () => {
   const { data: events, isLoading, isError } = useEvents();
+  const { data: venues } = useVenues();
   const addEvent = useAddEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
 
-  const [newEvent, setNewEvent] = useState({ name: '', date: '', venue: '' });
+  const [newEvent, setNewEvent] = useState({ name: '', date: new Date(), venue: '' });
   const [editingEvent, setEditingEvent] = useState(null);
 
   const handleInputChange = (e) => {
@@ -16,9 +19,13 @@ const EventManagement = () => {
     setNewEvent({ ...newEvent, [name]: value });
   };
 
+  const handleDateChange = (date) => {
+    setNewEvent({ ...newEvent, date });
+  };
+
   const handleAddEvent = () => {
     addEvent.mutate(newEvent);
-    setNewEvent({ name: '', date: '', venue: '' });
+    setNewEvent({ name: '', date: new Date(), venue: '' });
   };
 
   const handleUpdateEvent = () => {
@@ -70,11 +77,15 @@ const EventManagement = () => {
           </FormControl>
           <FormControl id="date" isRequired>
             <FormLabel>Date</FormLabel>
-            <Input name="date" value={editingEvent ? editingEvent.date : newEvent.date} onChange={handleInputChange} />
+            <DatePicker selected={editingEvent ? new Date(editingEvent.date) : newEvent.date} onChange={handleDateChange} />
           </FormControl>
           <FormControl id="venue" isRequired>
             <FormLabel>Venue</FormLabel>
-            <Input name="venue" value={editingEvent ? editingEvent.venue : newEvent.venue} onChange={handleInputChange} />
+            <Select name="venue" value={editingEvent ? editingEvent.venue : newEvent.venue} onChange={handleInputChange}>
+              {venues && venues.map((venue) => (
+                <option key={venue.id} value={venue.id}>{venue.name}</option>
+              ))}
+            </Select>
           </FormControl>
           <Button mt={4} colorScheme="teal" onClick={editingEvent ? handleUpdateEvent : handleAddEvent}>
             {editingEvent ? 'Update Event' : 'Add Event'}
