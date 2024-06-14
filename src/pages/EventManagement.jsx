@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, Heading, Table, Tbody, Td, Th, Thead, Tr, VStack, Input, FormControl, FormLabel, Select } from '@chakra-ui/react';
+import { Box, Button, Container, Heading, Table, Tbody, Td, Th, Thead, Tr, VStack, Input, FormControl, FormLabel, Select, Link } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useVenues } from '../integrations/supabase/index.js';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -57,7 +58,11 @@ const EventManagement = () => {
             <Tbody>
               {events.map((event) => (
                 <Tr key={event.id}>
-                  <Td>{event.name}</Td>
+                  <Td>
+                    <Link as={RouterLink} to={`/events/${event.id}`} color="teal.500">
+                      {event.name}
+                    </Link>
+                  </Td>
                   <Td>{event.date}</Td>
                   <Td>{event.venue}</Td>
                   <Td>
