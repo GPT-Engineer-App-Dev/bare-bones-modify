@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Button, Container, Heading, Text, VStack, FormControl, FormLabel, Input, Textarea } from '@chakra-ui/react';
+import { Box, Button, Container, Heading, Text, VStack, FormControl, FormLabel, Input, Textarea, Link } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import { useEvent, useVenue, useComments, useAddComment } from '../integrations/supabase/index.js';
 
 const EventDetails = () => {
@@ -50,6 +51,11 @@ const EventDetails = () => {
           <Button mt={4} colorScheme="teal" onClick={handleAddComment}>
             Add Comment
           </Button>
+        </Box>
+      <Box width="100%">
+          <Link as={RouterLink} to="/events" color="teal.500" fontWeight="bold">
+            Back to Events List
+          </Link>
         </Box>
       </VStack>
     </Container>
